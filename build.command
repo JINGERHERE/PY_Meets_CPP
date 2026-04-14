@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# ./build.command
+
+cd "$(dirname "$0")"
+
+
+# 刷新 Shell缓存
+echo ">>> START: Refresh Shell cache"
+hash -r # macOS/Linux (zsh/bash)
+
+
+# 删除环境中旧的文件和目录，确保干净的构建环境
+echo ""
+echo ">>> DO: 删除环境中旧的文件和目录: uv.lock, build, .venv, stubs"
+rm -rf uv.lock || { echo ">>> uv.lock not found, ignore"; }
+rm -rf build || { echo ">>> build not found, ignore"; }
+rm -rf .venv || { echo ">>> .venv not found, ignore"; }
+rm -rf stubs || { echo ">>> stubs not found, ignore"; }
+
+
+# 安装 C++ 依赖
+echo ""
+echo ">>> START: 安装 C++ 依赖"
+vcpkg install || { echo ">>> vcpkg install failed!"; exit 1; }
+
+
+echo ""
+echo ">>> START: uv sync（含 C++ 构建）"
+uv cache clean || { echo ">>> uv cache clean failed!"; exit 1; }
+uv sync --all-groups || { echo ">>> uv sync failed!"; exit 1; } # 重新同步并安装所有工具
+
+
+# 自动生成 .pyi 存根文件，让 IDE 能提示 C++ 模块的函数签名
+echo ""
+echo ">>> START: 生成 .pyi 存根文件"
+uv run pybind11-stubgen DemoUtils -o stubs/ || {
+    echo "    -> 存根生成失败（不影响运行，可忽略）"
+}
+
+
+echo ""
+echo ">>> DONE !"
+
+
+echo ""
+echo ">>> Test Python Demo"
+uv run python main.py || { echo ">>> Demo 运行失败!"; exit 1; }
