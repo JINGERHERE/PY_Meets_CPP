@@ -1,6 +1,7 @@
 # 当 Python 遇到 C++
 
 > 学习示例 —— 如何在 Python 中调用 C++ 编写的库
+
 > 目前仅在 `Apple M2 - macOS 15.5` 上测试通过
 
 本项目演示了如何通过 pybind11 将 C++ 代码编译为 Python 可调用的扩展模块，并使用 scikit-build-core 作为构建后端，vcpkg 管理 C++ 依赖，uv 管理 Python 环境。
