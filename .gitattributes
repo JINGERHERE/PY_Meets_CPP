@@ -1,0 +1,6 @@
+# 强制所有 shell 脚本在签出时使用 LF 换行符
+*.sh eol=lf
+*.command eol=lf
+
+# 强制批处理文件使用 CRLF 换行符
+*.bat eol=crlf
