@@ -1,6 +1,5 @@
 {
   "dependencies": [
-    "dataframe",
-    "pybind11"
+    "fmt"
   ]
 }

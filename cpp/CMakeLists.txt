@@ -34,7 +34,6 @@ target_include_directories(${target_name} PRIVATE
     # ${VCPKG_TARGET_TRIPLET} 是 vcpkg 安装时指定的 triplet，例如 x64-linux
 )
 
-
 # 动态库的运行时搜索路径（RPATH）配置
 # 问题背景：
 # DemoUtils.so 在运行时需要找到 libutils_lib.dylib
@@ -44,14 +43,24 @@ target_include_directories(${target_name} PRIVATE
 # $ORIGIN（Linux）/ @loader_path（macOS）：
 # 表示"当前这个 .so 文件所在的目录"
 # 这样无论项目装到哪里，只要 libutils_lib 和 DemoUtils.so 在同一目录，就能找到
-set_target_properties(${target_name} PROPERTIES
-
-    # macOS 用 @loader_path，Linux 用 $ORIGIN
-    INSTALL_RPATH "@loader_path"
-
-    # 构建阶段也生效（不设置的话只在 install 后才生效）
-    BUILD_WITH_INSTALL_RPATH TRUE
-)
+# ─────────────────────────────────────────────
+# RPATH 配置（动态库运行时搜索路径）
+# 只有 macOS 和 Linux 需要，Windows 用 DLL 搜索机制，不用 RPATH
+# ─────────────────────────────────────────────
+if(APPLE)
+    # macOS 用 @loader_path，表示"和当前 .so 同目录"
+    set_target_properties(${target_name} PROPERTIES
+        INSTALL_RPATH "@loader_path"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
+elseif(UNIX)
+    # Linux 用 $ORIGIN，含义相同
+    set_target_properties(${target_name} PROPERTIES
+        INSTALL_RPATH "$ORIGIN"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
+endif()
+# Windows 不设置 RPATH，系统会在 .pyd 文件所在目录自动查找 .dll
 
 
 # 安装阶段：把 DemoUtils.so 装到目标位置

@@ -9,6 +9,7 @@ uv.lock
 .DS_Store
 
 # Virtual environments
-.venv/
+vcpkg/
 vcpkg_installed/
+.venv/
 stubs/

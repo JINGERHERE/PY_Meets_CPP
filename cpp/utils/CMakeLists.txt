@@ -18,10 +18,25 @@
 #
 # OBJECT  → 只编译成 .o 目标文件，不打包，供其他目标直接引用
 
-# 改为 SHARED，生成动态库 libutils_lib.dylib（macOS）/ libutils_lib.so（Linux）
-add_library(utils_lib SHARED
-    interval_counter.cpp
-)
+# ─────────────────────────────────────────────
+# 库类型的平台选择
+# ─────────────────────────────────────────────
+# Windows 上动态库（.dll）有一个特殊要求：
+# 导出给外部使用的函数/类必须用 __declspec(dllexport) 标记（编译 dll 时）
+# 使用方必须用 __declspec(dllimport) 标记（编译使用方时）
+# 如果头文件里没有这些标记，MSVC 链接时会报"无法解析的外部符号"
+#
+# 解决方案有两种：
+# 方案A：在头文件里加 dllexport/dllimport 宏（改动较多）
+# 方案B：Windows 上改用静态库，彻底回避这个问题（推荐，简单直接）
+#
+# 这里选方案B：Windows 用 STATIC，Mac/Linux 用 SHARED
+
+if(WIN32)
+    add_library(utils_lib STATIC interval_counter.cpp)
+else()
+    add_library(utils_lib SHARED interval_counter.cpp)
+endif()
 
 # target_include_directories 设置头文件搜索路径
 # 语法：target_include_directories(<目标名> <传播性> <路径...>)
@@ -47,3 +62,9 @@ target_include_directories(utils_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 # 如果想精确控制哪些符号对外暴露（类似 Windows 的 __declspec(dllexport)），
 # 可以打开下面这行，然后在头文件里用 __attribute__((visibility("default"))) 标记要导出的符号
 # set_target_properties(utils_lib PROPERTIES CXX_VISIBILITY_PRESET hidden)
+
+# Mac/Linux 动态库：控制符号可见性（可选，不影响功能）
+# 打开后只有显式标记的符号对外可见，减少符号污染
+# if(NOT WIN32)
+#     set_target_properties(utils_lib PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# endif()

@@ -19,3 +19,9 @@ def leibniz_pi(iterations: int) -> float:
         result += term / (2.0 * i + 1.0)
     
     return result * 4.0
+
+if __name__ == "__main__":
+
+    iterations = 10_000_000
+    PI = leibniz_pi(iterations)
+    print(f"Leibniz PI: {PI: .6f}")
