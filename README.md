@@ -2,7 +2,7 @@
 
 > 学习示例 —— 如何在 Python 中调用 C++ 编写的库
 
-> 目前仅在 `Apple M2 - macOS 15.5` 上测试通过
+> 已在 `Apple M2 - macOS 15.5` 和 `Windows 11 (x64) - MSVC 19.33` 上测试通过
 
 本项目演示了如何通过 pybind11 将 C++ 代码编译为 Python 可调用的扩展模块，并使用 scikit-build-core 作为构建后端，vcpkg 管理 C++ 依赖，uv 管理 Python 环境。
 
@@ -24,6 +24,9 @@ PY_Meets_CPP/
 ├── pyproject.toml              # Python 项目配置 + scikit-build-core
 ├── vcpkg.json                  # C++ 依赖声明
 ├── vcpkg-configuration.json    # vcpkg 源配置
+├── uv.lock                     # Python 依赖锁定文件
+├── LICENSE                     # MIT 许可证
+├── .gitattributes              # Git 属性配置（换行符处理）
 │
 ├── cpp/                        # C++ 源代码目录
 │   ├── CMakeLists.txt          # cpp 子目录构建配置
@@ -37,8 +40,8 @@ PY_Meets_CPP/
 │   │
 │   ├── static_class/           # 静态类库
 │   │   ├── CMakeLists.txt
-│   │   ├── logger.h             # Logger 类声明
-│   │   └── logger.cpp          # Logger 类实现
+│   │   ├── logger.h            # Logger 类声明
+│   │   └── logger.cpp         # Logger 类实现
 │   │
 │   └── utils/                  # 工具库（动态库）
 │       ├── CMakeLists.txt
@@ -51,11 +54,20 @@ PY_Meets_CPP/
 │   └── _color_map.py           # 颜色工具
 │
 ├── doc/                        # 文档
-│   └── cmake_readme.md         # CMakeLists 完整教程
+│   └── cmake_tutorial.md       # CMakeLists 完整教程
 │
 ├── main.py                     # Python 演示入口
+│
+├── build/                      # 构建产物目录（自动生成）
+│
+├── vcpkg_installed/            # vcpkg 已安装库目录（自动生成）
+│
 ├── build.command               # 一键构建脚本（macOS/Linux）
-└── vcpkg_install.command       # vcpkg 依赖安装脚本
+├── build.sh                    # 构建脚本（通用 Shell）
+├── install_vcpkg.command       # vcpkg 安装脚本（macOS/Linux）
+├── install_vcpkg.sh            # vcpkg 安装脚本（通用 Shell）
+├── install_vcpkg.bat           # vcpkg 安装脚本（Windows）
+└── build.bat                   # 一键构建脚本（Windows）
 ```
 
 ---
@@ -165,22 +177,31 @@ uv run python main.py
 
 | 依赖 | 版本 | 用途 |
 |------|------|------|
-| pybind11 | latest | Python-C++ 绑定 |
-| dataframe | latest | 未使用 |
+| fmt | latest | 格式化输出库（未使用，仅用于测试依赖安装） |
 
 ### Python 依赖（pyproject.toml）
 
 | 依赖 | 版本 | 用途 |
 |------|------|------|
+| jupyter | ≥ 1.1.1 | 交互式编程环境 |
+| marimo | ≥ 0.17.6 | 交互式 Python 笔记本 |
 | matplotlib | ≥ 3.7.5 | 绘图 |
 | numpy | ≥ 1.24.4 | 数值计算 |
 | pandas | ≥ 2.0.3 | 数据处理 |
 | rich | ≥ 14.3.4 | 终端美化输出 |
 
+### 构建系统依赖
+
+| 依赖 | 版本 | 用途 |
+|------|------|------|
+| scikit-build-core | ≥ 0.9.0 | CMake-based Python build backend |
+| pybind11 | ≥ 3.0.3 | Python-C++ 绑定（构建时使用） |
+
 ### 开发依赖（dependency-groups）
 
 | 依赖 | 用途 |
 |------|------|
+| pybind11 | pybind11 开发头文件（由 uv 管理） |
 | pybind11-stubgen | 生成 `.pyi` 存根文件 |
 
 ---
