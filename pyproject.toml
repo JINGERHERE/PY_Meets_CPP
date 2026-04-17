@@ -28,6 +28,7 @@ build-dir = "build/{build_type}"
 # 开发期依赖，uv sync 会装，但不打包进发布版本
 [dependency-groups]
 dev = [
+    "pybind11>=3.0.3",
     "pybind11-stubgen>=2.5",
 ]
 

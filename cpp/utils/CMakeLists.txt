@@ -26,17 +26,15 @@
 # 使用方必须用 __declspec(dllimport) 标记（编译使用方时）
 # 如果头文件里没有这些标记，MSVC 链接时会报"无法解析的外部符号"
 #
-# 解决方案有两种：
-# 方案A：在头文件里加 dllexport/dllimport 宏（改动较多）
-# 方案B：Windows 上改用静态库，彻底回避这个问题（推荐，简单直接）
-#
-# 这里选方案B：Windows 用 STATIC，Mac/Linux 用 SHARED
+# 所有平台统一使用 SHARED 动态库
+# Windows 上不再退回 STATIC，通过头文件里的 UTILS_API 宏处理导出问题
+add_library(utils_lib SHARED interval_counter.cpp)
 
-if(WIN32)
-    add_library(utils_lib STATIC interval_counter.cpp)
-else()
-    add_library(utils_lib SHARED interval_counter.cpp)
-endif()
+# UTILS_LIB_EXPORTS：只在编译 utils_lib.dll 本身时定义
+# cmake 把它传给编译器（等价于 -DUTILS_LIB_EXPORTS）
+# 头文件里的 #ifdef UTILS_LIB_EXPORTS 就是检测这个宏
+# 使用方编译时不定义这个宏，头文件里自动切换到 dllimport
+target_compile_definitions(utils_lib PRIVATE UTILS_LIB_EXPORTS)
 
 # target_include_directories 设置头文件搜索路径
 # 语法：target_include_directories(<目标名> <传播性> <路径...>)
