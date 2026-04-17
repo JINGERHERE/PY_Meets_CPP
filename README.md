@@ -62,11 +62,11 @@ PY_Meets_CPP/
 │
 ├── vcpkg_installed/            # vcpkg 已安装库目录（自动生成）
 │
-├── build.command               # 一键构建脚本（macOS/Linux）
-├── build.sh                    # 构建脚本（通用 Shell）
-├── install_vcpkg.command       # vcpkg 安装脚本（macOS/Linux）
 ├── install_vcpkg.sh            # vcpkg 安装脚本（通用 Shell）
+├── install_vcpkg.command       # vcpkg 安装脚本（macOS/Linux）
 ├── install_vcpkg.bat           # vcpkg 安装脚本（Windows）
+├── build.sh                    # 一键构建脚本（通用 Shell）
+├── build.command               # 一键构建脚本（macOS/Linux）
 └── build.bat                   # 一键构建脚本（Windows）
 ```
 
