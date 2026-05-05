@@ -2,11 +2,13 @@
 
 > 学习示例 —— 如何在 Python 中调用 C++ 编写的库
 
-> 已在 `Apple M2 - macOS 15.5` 和 `Windows 11 (x64) - MSVC 19.33` 上测试通过
+> 已在 `Apple M2 - macOS 15.5` 、 `Windows 11 (x64) - MSVC 19.33` 和 `Ubuntu 24.04 (Container)` 上测试通过
 
 本项目演示了如何通过 pybind11 将 C++ 代码编译为 Python 可调用的扩展模块，并使用 scikit-build-core 作为构建后端，vcpkg 管理 C++ 依赖，uv 管理 Python 环境。
 
 **核心目标**：将项目所需的全部依赖和环境限制在项目根目录下，避免污染全局系统环境。
+
+> 在开发容器中应该可以直接在构建容器时`apt install python`来指定 python 版本，毕竟容器已经和宿主机有隔离，不必再使用 `uv` 隔离一下。
 
 ---
 
