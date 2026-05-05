@@ -1,0 +1,14 @@
+# 适用于 24.04
+sudo apt update && sudo apt install -y \
+    libglu1-mesa \
+    libgl1 \
+    libxcursor1 \
+    libxinerama1 \
+    libxft2 \
+    libxrandr2 \
+    libxfixes3 \
+    libfontconfig1 \
+    libxrender1 \
+    libsm6 \
+    libice6 \
+    python3-tk
