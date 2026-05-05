@@ -1,0 +1,45 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "Ubuntu",
+
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	// "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+	// 使用 Dockerfile 时这不使用镜像
+	
+	// ==== 使用 dockerfile 脚本构建 ====
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	
+	// ==== 使用 容器化开发 脚本构建 ====
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/install_uv.sh", // 执行构建脚本中的命令
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// vsocode 插件
+		"vscode": {
+			"extensions": [
+				"MS-CEINTL.vscode-language-pack-zh-hans", // 中文语言包
+				"ms-vscode.cmake-tools", // cmake 工具
+				"cheshirekow.cmake-format", // cmake 格式化插件
+				"ms-vscode.cpptools", // C/C++
+				"ms-vscode.cpp-devtools", // C/C++ 开发工具
+				"ms-vscode.cpptools-themes", // C/C++ 主题
+				// "llvm-vs-code-extensions.vscode-clangd", // clangd - 代码补全与格式化插件
+				// "vadimcn.vscode-lldb", // lldb 插件 - 调试器
+				"marscode.marscode-extension" // trae
+			]
+		}
+	},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	"remoteUser": "root" // 连接为 root 用户
+}

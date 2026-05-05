@@ -18,16 +18,19 @@ cmake_minimum_required(VERSION 3.15)
 # 如果强制用 clang 或 mingw gcc，和 vcpkg 库的 ABI 会不兼容，链接会报错
 if(NOT WIN32)
     # macOS 和 Linux 使用 clang
-    set(CMAKE_C_COMPILER clang)
-    set(CMAKE_CXX_COMPILER clang++)
+    # set(CMAKE_C_COMPILER clang)
+    # set(CMAKE_CXX_COMPILER clang++)
 
     # 如果想改用 gcc，注释上面两行，取消下面两行的注释
-    # set(CMAKE_C_COMPILER gcc)
-    # set(CMAKE_CXX_COMPILER g++)
+    set(CMAKE_C_COMPILER gcc)
+    set(CMAKE_CXX_COMPILER g++)
 endif()
 
 # Windows 上什么都不设置，cmake 自动找 MSVC（通过 VS2019 的环境变量）
 project(PY_MEETS_CPP VERSION 1.0 LANGUAGES CXX)
+
+# 这会确保所有的库（包括静态库）都带上 -fPIC 编译选项 （LInux 必须）
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
